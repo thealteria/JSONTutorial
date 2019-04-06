@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert'; //help to convert and display data
 import 'package:http/http.dart' as http;
+import './profile.dart';
 
 class ListSeparated extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class ListSeparated extends StatefulWidget {
 class Response extends State<ListSeparated> {
   List data = [];
   Future<List> getData() async {
-    String url = "http://jsonplaceholder.typicode.com/photos";
+    String url = "http://jsonplaceholder.typicode.com/posts";
 
     var response = await http.get(
       Uri.encodeFull(url),
@@ -34,7 +35,7 @@ class Response extends State<ListSeparated> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Parse Json"),
-        backgroundColor: Colors.orangeAccent,
+        // backgroundColor: Colors.orangeAccent,
         centerTitle: true,
       ),
       body: new Center(
@@ -49,7 +50,7 @@ class Response extends State<ListSeparated> {
             );
           } else {
             return new ListView.separated(
-              itemCount: snapshot.data.length,
+              itemCount: 5,
               padding: const EdgeInsets.all(5.0),
               scrollDirection: Axis.vertical,
               separatorBuilder: (BuildContext context, int position) {
@@ -58,11 +59,11 @@ class Response extends State<ListSeparated> {
               itemBuilder: (BuildContext context, int position) {
                 return new ListTile(
                   title: new Text(
-                    "${snapshot.data[position]['id']}",
+                    "${snapshot.data[position]['title']}",
                     style: new TextStyle(fontSize: 14.9),
                   ),
                   subtitle: new Text(
-                    "${snapshot.data[position]['title']}",
+                    "${snapshot.data[position]['body']}",
                     style: new TextStyle(
                       fontSize: 13.4,
                       color: Colors.grey,
@@ -70,12 +71,25 @@ class Response extends State<ListSeparated> {
                     ),
                   ),
                   leading: new CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(snapshot.data[position]['thumbnailUrl']),
+                    backgroundColor: Colors.blueAccent,
+                    child: new Text(
+                      "${snapshot.data[position]['title'][0].toString().toUpperCase()}",
+                      style: TextStyle(
+                        fontSize: 19.4,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // backgroundImage:
+                    //     NetworkImage(snapshot.data[position]['thumbnailUrl']),
                   ),
                   onTap: () {
-                    _showAlertDialog(context, "${data[position]['id']}",
-                        "${snapshot.data[position]['title']}");
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => new Profile(
+                                "${snapshot.data[position]['title'][0].toString().toUpperCase()}")));
+                    // _showAlertDialog(context, "${data[position]['id']}",
+                    //     "${snapshot.data[position]['title']}");
                   },
                 );
                 // );
